@@ -150,24 +150,9 @@ model.component('comp1').physics('acpr').feature('bpf1').set('c_mat', 'from_mat'
 % sets the direction of the background pressure field in the [x,y] plane
 % model.component('comp1').physics('acpr').feature('bpf1').set('dir', [1; 0]);
 %-------------------------------------------------------------------------%
-%% MESH
-disp(' -- Build mesh')
-%-------------------------------------------------------------------------%
-% creates a mesh object 'mesh1'
-model.component('comp1').mesh.create('mesh1');
-% sets the mesh size distribution as automatic (COMSOL controlled)
-model.component('comp1').mesh('mesh1').automatic(true);
-% selects the second item on COMSOL mesh size menu: 'Extra Fine'
-model.component('comp1').mesh('mesh1').autoMeshSize(2);
-% runs the mesh
-model.component('comp1').mesh('mesh1').run;
-%%% EXTRA CODE: gives the number of kiloelements + mean quality of the mesh
-meshstats = mphmeshstats(model);
-disp(['    > # of kElements: ',num2str(sum(meshstats.numelem)/1e3)]);
-disp(['    > Mean quality is: ',num2str(meshstats.meanquality*100),'%']);
-%-------------------------------------------------------------------------%
+
 %% STUDY
-disp(' -- Solving')
+disp(' -- Setting up Study')
 %-------------------------------------------------------------------------%
 % creates a study 'std1' with a frequency variable 'freq', set as 300 Hz
 model.study.create('std1');
@@ -193,6 +178,27 @@ model.sol('sol1').feature('s1').feature('p1').set('plistarr', {num2str(Freq.Vect
 model.sol('sol1').feature('s1').feature('p1').set('punit', {'Hz'});
 model.sol('sol1').feature('s1').feature('p1').set('pcontinuationmode', 'no');
 model.sol('sol1').feature('s1').feature('p1').set('preusesol', 'auto');
+
+%% MESH
+disp(' -- Build mesh')
+%-------------------------------------------------------------------------%
+% creates a mesh object 'mesh1'
+model.component('comp1').mesh.create('mesh1');
+% sets the mesh size distribution as automatic (COMSOL controlled)
+model.component('comp1').mesh('mesh1').automatic(true);
+% selects the second item on COMSOL mesh size menu: 'Extra Fine'
+model.component('comp1').mesh('mesh1').autoMeshSize(2);
+% runs the mesh
+model.component('comp1').mesh('mesh1').run;
+%%% EXTRA CODE: gives the number of kiloelements + mean quality of the mesh
+meshstats = mphmeshstats(model);
+disp(['    > # of kElements: ',num2str(sum(meshstats.numelem)/1e3)]);
+disp(['    > Mean quality is: ',num2str(meshstats.meanquality*100),'%']);
+%-------------------------------------------------------------------------%
+
+%% SOLVE
+disp(' -- Solving')
+
 %%% EXTRA CODE: opens a window to show the solver's progress
 ModelUtil.showProgress(true);
 % runs the solver
